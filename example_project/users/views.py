@@ -32,8 +32,8 @@ class HomeKnoxView(TemplateView):
 
 
 class LogoutSessionView(APIView):
-
-    def post(self, request, *args, **kwargs):
+    @staticmethod
+    def post(request, *args, **kwargs):
         logout(request)
         return Response(status=status.HTTP_204_NO_CONTENT)
 

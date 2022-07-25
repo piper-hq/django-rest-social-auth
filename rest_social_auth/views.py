@@ -195,13 +195,15 @@ class BaseSocialAuthView(GenericAPIView):
         cookies.
         """
 
-    def set_input_data(self, request, auth_data):
+    @staticmethod
+    def set_input_data(request, auth_data):
         """
         auth_data will be used used as request_data in strategy
         """
         request.auth_data = auth_data
 
-    def get_redirect_uri(self, manual_redirect_uri):
+    @staticmethod
+    def get_redirect_uri(manual_redirect_uri):
         if not manual_redirect_uri:
             manual_redirect_uri = getattr(
                 settings, 'REST_SOCIAL_OAUTH_ABSOLUTE_REDIRECT_URI', None)
@@ -228,7 +230,8 @@ class BaseSocialAuthView(GenericAPIView):
             logger.error(error)
         return Response(data=message, status=status.HTTP_400_BAD_REQUEST)
 
-    def log_exception(self, error):
+    @staticmethod
+    def log_exception(error):
         err_msg = error.args[0] if error.args else ''
         if getattr(error, 'response', None) is not None:
             try:
@@ -263,7 +266,8 @@ class SocialTokenUserAuthView(BaseSocialAuthView):
 
 
 class KnoxAuthMixin:
-    def get_authenticators(self):
+    @staticmethod
+    def get_authenticators():
         try:
             from knox.auth import TokenAuthentication
         except ImportError:
@@ -285,7 +289,8 @@ class SocialKnoxUserAuthView(KnoxAuthMixin, BaseSocialAuthView):
 
 
 class SimpleJWTAuthMixin:
-    def get_authenticators(self):
+    @staticmethod
+    def get_authenticators():
         try:
             from rest_framework_simplejwt.authentication import JWTAuthentication
         except ImportError:
