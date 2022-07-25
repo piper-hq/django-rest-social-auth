@@ -14,7 +14,7 @@ class DRFStrategy(DjangoStrategy):
                 # in case of token auth session can be disabled at all
                 pass
 
-        super(DjangoStrategy, self).__init__(storage, tpl)
+        super().__init__(storage, tpl)
 
     def request_data(self, merge=True):
         if self.request:

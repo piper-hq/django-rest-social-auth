@@ -1,11 +1,7 @@
 import logging
 import warnings
 
-try:
-    from urllib.parse import urljoin, urlencode, urlparse  # python 3x
-except ImportError:
-    from urllib import urlencode  # python 2x
-    from urlparse import urljoin, urlparse
+from urllib.parse import urljoin, urlencode, urlparse  # python 3x
 
 from django.conf import settings
 from django.http import HttpResponse
@@ -254,7 +250,7 @@ class SocialSessionAuthView(BaseSocialAuthView):
 
     @method_decorator(csrf_protect)  # just to be sure csrf is not disabled
     def post(self, request, *args, **kwargs):
-        return super(SocialSessionAuthView, self).post(request, *args, **kwargs)
+        return super().post(request, *args, **kwargs)
 
 
 class SocialTokenOnlyAuthView(BaseSocialAuthView):
@@ -267,7 +263,7 @@ class SocialTokenUserAuthView(BaseSocialAuthView):
     authentication_classes = (TokenAuthentication, )
 
 
-class KnoxAuthMixin(object):
+class KnoxAuthMixin:
     def get_authenticators(self):
         try:
             from knox.auth import TokenAuthentication
@@ -289,7 +285,7 @@ class SocialKnoxUserAuthView(KnoxAuthMixin, BaseSocialAuthView):
     serializer_class = UserKnoxSerializer
 
 
-class SimpleJWTAuthMixin(object):
+class SimpleJWTAuthMixin:
     def get_authenticators(self):
         try:
             from rest_framework_simplejwt.authentication import JWTAuthentication
