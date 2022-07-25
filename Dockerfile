@@ -1,5 +1,5 @@
 # Base image
-FROM python:3.7.6
+FROM python:3.10.5
 
 RUN set -eux; \
     apt-get update; \
