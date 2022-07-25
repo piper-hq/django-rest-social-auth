@@ -1,3 +1,4 @@
+import contextlib
 import logging
 import warnings
 
@@ -144,7 +145,7 @@ class BaseSocialAuthView(GenericAPIView):
             if origin:
                 relative_path = urlparse(self.request.backend.redirect_uri).path
                 url = urlparse(origin)
-                origin_scheme_host = "%s://%s" % (url.scheme, url.netloc)
+                origin_scheme_host = f"{url.scheme}://{url.netloc}"
                 location = urljoin(origin_scheme_host, relative_path)
                 self.request.backend.redirect_uri = iri_to_uri(location)
         is_authenticated = user_is_authenticated(user)
@@ -217,14 +218,12 @@ class BaseSocialAuthView(GenericAPIView):
             if not isinstance(error, AuthException) or LOG_AUTH_EXCEPTIONS:
                 self.log_exception(error)
                 if hasattr(error, 'response'):
-                    try:
+                    with contextlib.suppress(KeyError, TypeError):
                         message = error.response.json()['error']
                         if isinstance(message, dict) and 'message' in message:
                             message = message['message']
                         elif isinstance(message, list) and len(message):
                             message = message[0]
-                    except (KeyError, TypeError):
-                        pass
         else:
             logger.error(error)
         return Response(data=message, status=status.HTTP_400_BAD_REQUEST)

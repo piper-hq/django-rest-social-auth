@@ -1,3 +1,4 @@
+import contextlib
 from social_django.strategy import DjangoStrategy
 
 
@@ -8,12 +9,8 @@ class DRFStrategy(DjangoStrategy):
         self.session = {}
 
         if request:
-            try:
+            with contextlib.suppress(AttributeError):
                 self.session = request.session
-            except AttributeError:
-                # in case of token auth session can be disabled at all
-                pass
-
         super().__init__(storage, tpl)
 
     def request_data(self, merge=True):
